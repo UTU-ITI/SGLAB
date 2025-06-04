@@ -1,120 +1,120 @@
 # STLAB
 Soporte Tècnico de Laboratorios
+# Sistema de Gestión de Laboratorios - MVP
 
----
 
-# Detalle de Tareas por Sprint (Versión Ampliada)
+Sistema para registro y gestión del estado de equipos en laboratorios informáticos, con módulos para estudiantes y administradores.
 
-## Sprint 1 - Infraestructura y Diseño
+## 📌 Requerimientos Clave
 
-### Diagrama ER y SQL
-1. Definir entidades principales (Registros, Equipos, Usuarios)
-2. Crear relaciones y cardinalidades
-3. Escribir script SQL con:
-   - Creación de tablas
-   - Índices optimizados
-   - Usuario admin inicial
+### 🎯 Requerimientos Funcionales (RF)
 
-### Mockups de Interfaces
-1. Diseñar en Figma/Balsamiq:
-   - Formulario de registro estudiantil
-   - Vista de lista administrativa
-   - Pantalla de login
-2. Exportar como PDF a `docs/design/`
+1. **Registro Estudiantil**
+   - Formulario para reportar estado de equipos (N/S, Nombre, Estado, Descripción)
+   - Validación de C.I. (8 dígitos)
+   - Registro automático de fecha/hora
 
-### Configuración Servidor
-1. Documentar requisitos mínimos
-2. Crear script de instalación LAMP
-3. Configurar permisos básicos
+2. **Panel Administrativo**
+   - Visualización de registros filtrables por fecha/estado
+   - Modificación de estados
+   - Autenticación segura
 
-### Script PowerShell Base
-1. Obtener datos básicos:
-   - Hostname
-   - IP
-   - Sistema operativo
-2. Guardar salida en JSON
+3. **Diagnóstico de Equipos**
+   - Script PowerShell para recolectar datos técnicos
+   - Tarea programada para diagnóstico automático
 
----
+### 🛡️ Requerimientos No Funcionales (RNF)
 
-## Sprint 2 - Núcleo del Sistema
+1. **Usabilidad**
+   - Interfaz intuitiva (<3 clics para acciones principales)
+   - Tiempo respuesta <2s
 
-### Backend PHP
-1. Implementar endpoints REST:
-   - POST /registros (crear)
-   - GET /registros (listar)
-   - PUT /registros/{id} (actualizar)
-2. Validar todos los inputs
+2. **Seguridad**
+   - Autenticación con bcrypt
+   - Protección contra inyección SQL
+   - Validación cliente/servidor
 
-### Autenticación
-1. Sistema login/logout
-2. Protección de rutas admin
-3. Manejo de sesiones
+3. **Compatibilidad**
+   - Soporte para Chrome, Edge, Firefox
+   - Diseño responsive
 
-### Formulario Web
-1. HTML5 semántico
-2. Validación con JavaScript
-3. Estilos CSS responsivos
+## 📅 Planificación por Sprints (4 semanas)
 
-### Script PS Completo
-1. Ampliar con:
-   - CPU, RAM, Disco
-   - Conectividad de red
-   - Software instalado
-2. Formatear salida profesional
+### 🚀 Sprint 1: Infraestructura y Diseño
 
----
+**Entregables:**
+- [ ] Diagrama ER y script SQL (`database/schema.sql`)
+- [ ] Mockups de interfaces (PDF/FIGMA en `docs/design`)
+- [ ] Configuración inicial servidor (`docs/setup.md`)
+- [ ] Script base PowerShell (`scripts/diagnostico_base.ps1`)
 
-## Sprint 3 - Integración
+**Tareas Técnicas:**
+1. Diseñar modelo de base de datos
+2. Crear prototipos de UI
+3. Configurar ambiente LAMP
+4. Desarrollar script PS para datos básicos
 
-### Panel Admin
-1. Tabla con:
-   - Ordenamiento por columnas
-   - Filtros combinados
-   - Paginación
-2. Gráficos resumen (Chart.js)
+### 🛠️ Sprint 2: Núcleo del Sistema
 
-### API Filtros
-1. Implementar filtrado por:
-   - Fechas
-   - Estado equipo
-   - C.I. estudiante
-2. Optimizar consultas SQL
+**Entregables:**
+- [ ] Backend PHP con endpoints (`api/registros.php`)
+- [ ] Sistema de autenticación (`lib/auth.php`)
+- [ ] Formulario web funcional (`public/formulario.html`)
+- [ ] Script PS completo (`scripts/diagnostico_completo.ps1`)
 
-### Tarea Programada
-1. Configurar ejecución diaria
-2. Enviar reportes por email
-3. Logging de ejecuciones
+**Tareas Técnicas:**
+1. Implementar CRUD para registros
+2. Desarrollar módulo de login
+3. Crear formulario con validación JS
+4. Ampliar script PS con todas las métricas
 
----
+### ✨ Sprint 3: Integración y Funcionalidades Avanzadas
 
-## Sprint 4 - Despliegue
+**Entregables:**
+- [ ] Panel administrativo (`admin/index.html`)
+- [ ] API para filtros (`api/filtros.php`)
+- [ ] Tarea programada PS (`scripts/tarea_programada.ps1`)
+- [ ] Documentación API (`docs/api.md`)
 
-### Pruebas Automatizadas
-1. Pruebas PHPUnit para:
-   - Validaciones
-   - Autenticación
-   - Consultas DB
-2. Pruebas E2E con Cypress
+**Tareas Técnicas:**
+1. Desarrollar interfaz de administración
+2. Implementar filtros complejos
+3. Configurar tarea programada Windows
+4. Documentar endpoints API
 
-### Script Despliegue
-1. Automatizar:
-   - Copia de archivos
-   - Migraciones DB
-   - Configuración
-2. Modo rollback
+### 🚢 Sprint 4: Pruebas y Despliegue
 
-### Documentación Final
-1. Manual usuario (PDF)
-2. Wiki técnica (Markdown)
-3. Video demostración (5 min)
+**Entregables:**
+- [ ] Suite de pruebas (`tests/`)
+- [ ] Script despliegue (`deploy.sh`)
+- [ ] Manual de usuario (`docs/manual_usuario.md`)
+- [ ] Video demostración (`demo/demo.mp4`)
 
----
+**Tareas Técnicas:**
+1. Realizar pruebas unitarias/integración
+2. Automatizar despliegue
+3. Elaborar documentación final
+4. Grabar video demostrativo
 
-Este plan detallado permite:
-✅ Trabajo en paralelo por especialidades  
-✅ Entregas semanales claras  
-✅ Criterios de aceptación definidos  
-✅ Seguimiento del progreso  
+## 🛠️ Instalación
+
+1. **Requisitos:**
+   - Servidor Linux (Ubuntu 20.04+)
+   - Apache 2.4, PHP 7.4+, MySQL 8.0+
+   - PowerShell 5.1+ (para scripts)
+
+2. **Configuración Inicial:**
+```bash
+# Clonar repositorio
+git clone https://github.com/tu-repo/gestion-laboratorios.git
+cd gestion-laboratorios
+
+# Configurar base de datos
+mysql -u root -p < database/schema.sql
+
+# Permisos
+chmod +x scripts/*.ps1
+chmod +x deploy.sh
 
 📂 Estructura de Directorios
 ├── api/               # Endpoints PHP
