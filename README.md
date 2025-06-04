@@ -116,4 +116,14 @@ Este plan detallado permite:
 ✅ Criterios de aceptación definidos  
 ✅ Seguimiento del progreso  
 
-¿Necesitas que profundice en algún área específica del plan?
+📂 Estructura de Directorios
+├── api/               # Endpoints PHP
+├── database/          # Esquema SQL
+├── docs/              # Documentación
+├── public/            # Archivos accesibles web
+│   ├── css/
+│   ├── js/
+│   └── index.html
+├── scripts/           # Scripts PowerShell
+├── tests/             # Pruebas automatizadas
+└── README.md          # Este archivo
