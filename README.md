@@ -1,5 +1,3 @@
-# STLAB
-Soporte Tècnico de Laboratorios
 # Sistema de Gestión de Laboratorios - MVP
 
 
@@ -88,25 +86,19 @@ Sistema para registro y gestión del estado de equipos en laboratorios informát
 - [ ] Suite de pruebas (`tests/`)
 - [ ] Script despliegue (`deploy.sh`)
 - [ ] Manual de usuario (`docs/manual_usuario.md`)
-- [ ] Video demostración (`demo/demo.mp4`)
 
-**Tareas Técnicas:**
-1. Realizar pruebas unitarias/integración
-2. Automatizar despliegue
-3. Elaborar documentación final
-4. Grabar video demostrativo
 
 ## 🛠️ Instalación
 
 1. **Requisitos:**
-   - Servidor Linux (Ubuntu 20.04+)
-   - Apache 2.4, PHP 7.4+, MySQL 8.0+
+   - Servidor Linux (Ubuntu 22.04+)
+   - Apache 2.4, PHP 8.2+, MySQL 8.0+
    - PowerShell 5.1+ (para scripts)
 
 2. **Configuración Inicial:**
 ```bash
 # Clonar repositorio
-git clone https://github.com/tu-repo/gestion-laboratorios.git
+git clone https://github.com/utu-iti/gestion-laboratorios.git
 cd gestion-laboratorios
 
 # Configurar base de datos
