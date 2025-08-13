@@ -1,6 +1,22 @@
 # Sistema de Gestión de Laboratorios - MVP
 
-
+/sglab
+├── /
+│   ├── /Core
+│   ├── /Controllers
+│   ├── /Models
+│   ├── /Views
+│   └── /Services
+├── /config
+├── /public
+│   └── index.html
+│   └── /asset
+            └── /img   
+            └── /css
+            └── /js                    
+│
+├── /tests
+└── vendor
 Sistema para registro y gestión del estado de equipos en laboratorios informáticos, con módulos para estudiantes y administradores.
 
 ## 📌 Requerimientos Clave
