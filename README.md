@@ -1,7 +1,7 @@
 # Sistema de Gestión de Laboratorios - MVP
 
 /sglab
-├── /
+├── /app
 │   ├── /Core
 │   ├── /Controllers
 │   ├── /Models
@@ -11,9 +11,9 @@
 ├── /public
 │   └── index.html
 │   └── /asset
-            └── /img   
-            └── /css
-            └── /js                    
+│             └── /img   
+│             └── /css
+│             └── /js                    
 │
 ├── /tests
 └── vendor
