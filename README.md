@@ -1,22 +1,5 @@
 # Sistema de Gestión de Laboratorios - MVP
 
-/sglab
-├── /app
-│   ├── /Core
-│   ├── /Controllers
-│   ├── /Models
-│   ├── /Views
-│   └── /Services
-├── /config
-├── /public
-│   └── index.html
-│   └── /asset
-│             └── /img   
-│             └── /css
-│             └── /js                    
-│
-├── /tests
-└── vendor
 Sistema para registro y gestión del estado de equipos en laboratorios informáticos, con módulos para estudiantes y administradores.
 
 ## 📌 Requerimientos Clave
@@ -119,19 +102,46 @@ cd gestion-laboratorios
 
 # Configurar base de datos
 mysql -u root -p < database/schema.sql
+#Previamente exportar el modelo del proyecto con
+mysqldump -u root -p > database/schema.sql
 
 # Permisos
-chmod +x scripts/*.ps1
+chmod +x scripts/registros.ps1
 chmod +x deploy.sh
 
 📂 Estructura de Directorios
+/sglab
 ├── api/               # Endpoints PHP
+│   ├── /Core
+│   ├── /Controllers
+│   ├── /Models
+│   ├── /Views
+│   └── /Services
+├── /config
+│       └── /prod
+│       └── /test
+│       └── /dev               
 ├── database/          # Esquema SQL
 ├── docs/              # Documentación
 ├── public/            # Archivos accesibles web
 │   ├── css/
 │   ├── js/
+│   └── img/   
 │   └── index.html
 ├── scripts/           # Scripts PowerShell
+│   └── registro.ps1
 ├── tests/             # Pruebas automatizadas
+└── vendor/            # Liberias necesarias por composer
 └── README.md          # Este archivo
+
+
+
+├── /public
+│   └── index.html
+│   └── /asset
+│             └── /img   
+│             └── /css
+│             └── /js                    
+
+
+```
