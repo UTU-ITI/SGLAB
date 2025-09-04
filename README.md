@@ -1,5 +1,26 @@
 # Sistema de Gestión de Laboratorios - MVP
 
+SGLAB/
+ ├── app/
+ │   ├── Controllers/
+ │   │    ├── AuthController.php
+ │   │    └── UsuarioController.php
+ │   ├── Models/
+ │   │    ├── Personas.php
+ │   │    ├── Usuarios.php
+ │   │    └── Perfiles.php
+ │   ├── Database/
+ │   │    └── ConexionDB.php
+ │   └── Factories/
+ │        └── UsuarioFactory.php
+ ├── public/
+ │   ├── index.php
+ │   ├── login.php
+ │   └── register.php
+ ├── .env.example
+ ├── composer.json
+
+
 Sistema para registro y gestión del estado de equipos en laboratorios informáticos, con módulos para estudiantes y administradores.
 
 ## 📌 Requerimientos Clave
