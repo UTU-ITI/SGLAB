@@ -1,5 +1,13 @@
 # Script PowerShell: Diagnóstico del PC y exportación en formato TOML con clave SSH
+#$usuario = "juan"
+$usuario = [Environment]::UserName
+$servidor = "localhost"
+$laboratorio= "/LAB6"
+$origen = "$laboratorio"
 
+$destino = "/home/" + $usuario + $laboratorio
+$clavePrivada = "$env:USERPROFILE\.ssh\id_rsa"
+$log = Join-Path $rutaSalida "subir_archivos.log
 # Ejecutar comandos necesarios para permisos y claves
 ssh-keygen -t rsa -b 4096
 get-ExecutionPolicy
@@ -112,6 +120,7 @@ catch {
 }
 
 # Solicitar y validar cédula del usuario
+#//TODO: Verificar si viene parametro ci=1 
 do {
     $cedula = Read-Host "Ingrese su cedula (maximo 8 digitos numericos)"
     $cedulaValida = $cedula -match '^\d{1,8}$'
@@ -122,11 +131,12 @@ do {
 
 # Ruta y nombre de archivo de salida (en el Escritorio del usuario)
 $escritorio = [Environment]::GetFolderPath("Desktop")
-$archivo = Join-Path $escritorio "$fecha-$nombrePC-$estado.toml"
+$archivo = Join-Path $escritorio "$fecha-$nombrePC-$estado-$numeroSerie.toml"
 
 # Crear contenido TOML
 $contenido = @"
 [info_general]
+serial = (Get-CimInstance Win32_BIOS).SerialNumber
 fecha = "$($fechaLegible)"
 nombre_pc = "$($nombrePC)"
 estado_conexion = "$($estado)"
@@ -161,6 +171,7 @@ try {
 }
 catch {
     Write-Output "Error al guardar archivo: $($_.Exception.Message)"
+    Write-Output "========== SCRIPT con ERROR=========="
     exit 1
 }
 
@@ -174,17 +185,22 @@ Write-Output $clavePublica
 Write-Output "======================================"
 
 # Código SCP original comentado
-<#
-$usuario = [Environment]::UserName
-$servidor = "localhost"
-$ping = Test-Connection -ComputerName $servidor -Count 1 -Quiet
-    if ($ping) {
-        $estado = "Exito: scp $archivo "$usuario@$servidor:LAB6/""
-    }
-    else {
-        $estado = "Fallo: Revisar conexion a servidor SSH: $servidor"
-    }
-scp $archivo "$usuario@$servidor:LAB6/"
-#>veri
+try {
+	$ping = Test-Connection -ComputerName $servidor -Count 1 -Quiet
+	    if ($ping) {
+        	Write-Output "Subiendo archivo: scp $archivo "$usuario@$servidor:LAB6/""
+		    scp $archivo "$usuario@$servidor:LAB6/"
+	    }
+        else {
+      	    Write-Output "Fallo: Revisar conexion a servidor SSH: $servidor"
+	        Write-Output "========== SCRIPT CON ERROR=========="
+    	    exit 1
+        } 
+}
+catch {
+    Write-Output "Error al ejecutar ping: $($_.Exception.Message)"
+    Write-Output "========== SCRIPT con ERROR=========="
+    exit 1
+}
 
-Write-Output "========== SCRIPT COMPLETADO =========="
+Write-Output "========== SCRIPT COMPLETADO con EXITO=========="
