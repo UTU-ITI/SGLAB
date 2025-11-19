@@ -2,14 +2,14 @@ services:
   webserver:
     build:
       context: ../
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./docker/php/Dockerfile
     container_name: apache_web
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ../www:/var/www/html
-      - ../certs/etc:/etc/letsencrypt
+      - public-WEB:/var/www/html
+     # - ../certs/etc:/etc/letsencrypt
     environment:
       - DB_HOST=database
       - DB_NAME=${DB_NAME}
@@ -33,7 +33,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ../sql:/docker-entrypoint-initdb.d
+      - .sql:/docker-entrypoint-initdb.d
       - mysql-data:/var/lib/mysql  # Volumen persistente para datos
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
@@ -44,35 +44,7 @@ services:
     restart: unless-stopped
     networks:
       - app-network
-
-  certbot:
-    image: certbot/certbot
-    container_name: certbot_client
-    volumes:
-      - ../certs/etc:/etc/letsencrypt
-      - ../certs/lib:/var/lib/letsencrypt  # Volumen adicional para datos de certbot
-      - ../www:/var/www/html
-    environment:
-      - CERTBOT_EMAIL=${CERTBOT_EMAIL}
-      - DOMAIN=${DOMAIN}
-    command: 
-      - certonly
-      - --webroot
-      - --webroot-path=/var/www/html
-      - --email
-      - ${CERTBOT_EMAIL}
-      - --agree-tos
-      - --no-eff-email
-      - --non-interactive
-      - -d
-      - ${DOMAIN}
-    depends_on:
-      - webserver
-    networks:
-      - app-network
-
-  # Servicio opcional para renovación automática de certificados
-  certbot-renew:
+  
     image: certbot/certbot
     container_name: certbot_renew
     volumes:

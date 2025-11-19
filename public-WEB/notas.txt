@@ -1,0 +1,19 @@
+en caso de querer usar las variables de sesion mejor tenemos que pasar todos los archivos .html a .php 
+para manejar las sesiones deesta manejar
+<?php
+
+// Inicia o reanuda la sesion existente
+session_start();
+
+// Comprueba si la variable de sesión 'usuario_id' NO existe.
+if (!isset($_SESSION['usuario_id'])) {
+    // Si no existe, significa que el usuario no ha iniciado sesión.
+    // Lo redirigimos a la página de login.
+    header('Location: login_usuario.html');
+    exit(); // Es importante detener la ejecución del resto de la página.
+}
+?>
+
+//luego si el codigo html
+<!DOCTYPE html>
+<html lang="es">
