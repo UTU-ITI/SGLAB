@@ -4,8 +4,8 @@ $usuario = [Environment]::UserName
 $servidor = "192.168.2.119"
 $laboratorio= "LAB6"
 $destino = "/home/" + $usuario + "/" + $laboratorio
-$clavePrivada = "$env:USERPROFILE\.ssh\id_rsa"
-$log = Join-Path $rutaSalida "subir_archivos.log"
+$clavePrivada = Join-Path $env:USERPROFILE ".ssh\id_rsa"
+# $log variable removed as it was unused
 
 # Ejecutar comandos necesarios para permisos y claves
 ssh-keygen -t rsa -b 4096
@@ -18,7 +18,7 @@ $fechaLegible = Get-Date -Format "yyyy/MM/dd (HH:mm)"
 $nombrePC = $env:COMPUTERNAME
 
 # Función para generar clave SSH si no existe
-function Generate-SSHKey {
+function New-SSHKey {
     $sshDir = "$env:USERPROFILE\.ssh"
     $privateKeyPath = "$sshDir\id_rsa"
     $publicKeyPath = "$sshDir\id_rsa.pub"
@@ -46,6 +46,8 @@ function Generate-SSHKey {
     }
 
     Write-Output "Generando nueva clave SSH..."
+    Write-Output "Directorio .ssh = $sshDir"
+
 
     try {
         Get-Command ssh-keygen -ErrorAction Stop | Out-Null
@@ -83,7 +85,7 @@ function Generate-SSHKey {
 
 # Generar o obtener clave SSH pública
 Write-Output "========== GESTION DE CLAVES SSH =========="
-$clavePublica = Generate-SSHKey
+$clavePublica = New-SSHKey
 Write-Output "=========================================="
 
 # Intentar hacer ping al Gateway
@@ -158,7 +160,7 @@ disco_c_gb = $discoTotal
 [ssh]
 clave_publica = "$($clavePublica.Trim())"
 usuario = "$($env:USERNAME)"
-ruta_clave = "$($env:USERPROFILE)\.ssh\id_rsa.pub"
+ruta_clave = "$($clavePrivada + '.pub')"
 
 [usuario_responsable]
 cedula = "$cedula"
@@ -207,8 +209,8 @@ try {
 		    scp $archivo "$usuario@$servidor:LAB6/"
 	    }
         else {
-      	    Write-Output "Fallo: Revisar conexion a servidor SSH: $servidor"
-	        Write-Output "========== SCRIPT CON ERROR=========="
+      	    Write-Output "Fallo: Revisar conexion a servidor SSH: $servidor"       	        Write-Output "========== SCRIPT CON ERROR=========="
+            Write-Output "========== HAY QUE ESTAR EN LA RED DE UTU (192.168.2.0/24)=========="
     	    exit 1
         } 
 }
