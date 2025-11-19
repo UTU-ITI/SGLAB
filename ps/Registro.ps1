@@ -5,7 +5,7 @@ $servidor = "192.168.2.119"
 $laboratorio= "LAB6"
 $destino = "/home/" + $usuario + "/" + $laboratorio
 $clavePrivada = "$env:USERPROFILE\.ssh\id_rsa"
-$log = Join-Path $rutaSalida "subir_archivos.log
+$log = Join-Path $rutaSalida "subir_archivos.log"
 
 # Ejecutar comandos necesarios para permisos y claves
 ssh-keygen -t rsa -b 4096
@@ -191,6 +191,9 @@ catch {
 Write-Output ""
 Write-Output "========== DIAGNOSTICO COMPLETADO =========="
 Write-Output "Archivo generado: $archivo"
+Write-Output "Usuario: $usuario"
+Write-Output "Servidor SSH: $servidor"
+Write-Output "Directorio destino: $destino"
 Write-Output ""
 Write-Output "========== CLAVE SSH PUBLICA =========="
 Write-Output $clavePublica
