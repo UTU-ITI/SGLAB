@@ -44,44 +44,44 @@ function New-SSHKey {
             return "ERROR: No se pudo leer la clave SSH existente"
         }
     }
-
-    Write-Output "Generando nueva clave SSH..."
-    Write-Output "Directorio .ssh = $sshDir"
-
-
-    try {
-        Get-Command ssh-keygen -ErrorAction Stop | Out-Null
-    }
-    catch {
-        Write-Output "ssh-keygen no está disponible en el sistema"
-        return "ERROR: ssh-keygen no disponible. Instale OpenSSH Client."
-    }
-
-    $sshKeygenArgs = @(
-        "-t", "rsa",
-        "-b", "2048", 
-        "-f", $privateKeyPath,
-        "-N", '""',
-        "-C", "$env:USERNAME@$env:COMPUTERNAME"
-    )
+    else {
+         Write-Output "Generando nueva clave SSH..."
+        Write-Output "Directorio .ssh = $sshDir"
+        try {
+            Get-Command ssh-keygen -ErrorAction Stop | Out-Null
+        }
+        catch {
+            Write-Output "ssh-keygen no está disponible en el sistema"
+            return "ERROR: ssh-keygen no disponible. Instale OpenSSH Client."
+        }
+        $sshKeygenArgs = @(
+            "-t", "rsa",
+            "-b", "2048", 
+            "-f", $privateKeyPath,
+            "-N", '""',
+            "-C", "$env:USERNAME@$env:COMPUTERNAME"
+        )
     
-    try {
-        & ssh-keygen @sshKeygenArgs
-        if (Test-Path $publicKeyPath) {
-            Write-Output "Clave SSH generada exitosamente"
-            $nuevaClave = Get-Content $publicKeyPath -Raw
-            return $nuevaClave
+        try {
+            & ssh-keygen @sshKeygenArgs
+            if (Test-Path $publicKeyPath) {
+                Write-Output "Clave SSH generada exitosamente"
+                $nuevaClave = Get-Content $publicKeyPath -Raw
+                return $nuevaClave
+            }
+            else {
+                Write-Output "Error al generar la clave SSH"
+                return "ERROR: No se pudo generar la clave SSH"
+            }
         }
-        else {
-            Write-Output "Error al generar la clave SSH"
-            return "ERROR: No se pudo generar la clave SSH"
+        catch {
+            Write-Output "Error ejecutando ssh-keygen: $_"
+            return "ERROR: ssh-keygen falló - $($_.Exception.Message)"
         }
-    }
-    catch {
-        Write-Output "Error ejecutando ssh-keygen: $_"
-        return "ERROR: ssh-keygen falló - $($_.Exception.Message)"
     }
 }
+
+   
 
 # Generar o obtener clave SSH pública
 Write-Output "========== GESTION DE CLAVES SSH =========="
@@ -165,11 +165,11 @@ ruta_clave = "$($clavePrivada + '.pub')"
 [usuario_responsable]
 cedula = "$cedula"
 
-[diagnostico_red]
-LAN = "$($pingLAN -replace 'True','Exito' -replace 'False','Fallo')"
-WAN = "$($pingWAN -replace 'True','Exito' -replace 'False','Fallo')"
-DHCP = "$($usaDHCP -replace 'True','Exito' -replace 'False','Fallo')"
-DNS = "$($dnsOK -replace 'True','Exito' -replace 'False','Fallo')"
+#[diagnostico_red]
+#LAN = "$($pingLAN -replace 'True','Exito' -replace 'False','Fallo')"
+#WAN = "$($pingWAN -replace 'True','Exito' -replace 'False','Fallo')"
+#DHCP = "$($usaDHCP -replace 'True','Exito' -replace 'False','Fallo')"
+#DNS = "$($dnsOK -replace 'True','Exito' -replace 'False','Fallo')"
 
 [recursos_disponibles]
 cpu_uso_porcentaje = $cpuUso
