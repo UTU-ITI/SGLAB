@@ -3,9 +3,9 @@ param(
     [int]$cedula = 0
 )
 
-#$usuario = "juan"
-$usuario = [Environment]::UserName
-$usuario = $usuario.ToLower()
+$usuario = "tecnicatura"
+#$usuario = [Environment]::UserName
+#$usuario = $usuario.ToLower()
 $servidor = "192.168.2.46"
 $laboratorio= "LAB6"
 $destino = "/home/" + $usuario + "/SGLAB/" + $laboratorio
@@ -122,17 +122,54 @@ catch {
     exit 1
 }
 
+# Función para validar cédula uruguaya con dígito verificador
+function Test-CedulaUruguaya {
+    param([string]$cedula)
+
+    # Verificar formato básico (1-8 dígitos)
+    if ($cedula -notmatch '^\d{1,8}$') {
+        return $false
+    }
+
+    # Algoritmo de validación de cédula uruguaya
+    $cedulaStr = $cedula.PadLeft(7, '0')
+    $digitos = $cedulaStr.ToCharArray() | ForEach-Object { [int]::Parse($_) }
+
+    # Coeficientes: 2,9,8,7,6,3,4
+    $coeficientes = @(2,9,8,7,6,3,4)
+    $suma = 0
+
+    for ($i = 0; $i -lt 7; $i++) {
+        $suma += $digitos[$i] * $coeficientes[$i]
+    }
+
+    $resto = $suma % 10
+    $digitoVerificador = if ($resto -eq 0) { 0 } else { 10 - $resto }
+
+    # Si tiene 8 dígitos, validar el último como verificador
+    if ($cedula.Length -eq 8) {
+        $ultimoDigito = [int]::Parse($cedula.Substring(7, 1))
+        return $ultimoDigito -eq $digitoVerificador
+    }
+
+    # Si tiene menos de 8 dígitos, es válida (no incluye verificador)
+    return $true
+}
+
 # Solicitar y validar cédula del usuario
 if ($cedula -eq 0) {
+    Write-Output "Ejecutando en modo desatendido con cedula = 0"
+} else {
+    # Si se pasó parámetro diferente de 0, solicitar cédula
     do {
-        $cedula = Read-Host "Ingrese su cedula (maximo 8 digitos numericos)"
-        $cedulaValida = $cedula -match '^\d{1,8}$'
+        $inputCedula = Read-Host "Ingrese su cedula (maximo 8 digitos numericos)"
+        $cedulaValida = Test-CedulaUruguaya $inputCedula
         if (-not $cedulaValida) {
-            Write-Output "Cédula inválida. Debe contener solo números y hasta 8 dígitos."
+            Write-Output "Cédula inválida. Debe contener solo números (1-8 dígitos) y tener dígito verificador válido si tiene 8 dígitos."
+        } else {
+            $cedula = [int]$inputCedula
         }
     } until ($cedulaValida)
-} else {
-    Write-Output "Usando cédula del parámetro: $cedula"
 }
 
 # Ruta y nombre de archivo de salida (en el Escritorio del usuario)
