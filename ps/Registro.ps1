@@ -1,10 +1,11 @@
 # Script PowerShell: Diagnóstico del PC y exportación en formato TOML con clave SSH
 #$usuario = "juan"
 $usuario = [Environment]::UserName
-$servidor = "192.168.2.119"
+$usuario = $usuario.ToLower()
+$servidor = "192.168.2.46"
 $laboratorio= "LAB6"
-$destino = "/home/" + $usuario + "/" + $laboratorio
-$clavePrivada = Join-Path $env:USERPROFILE ".ssh\id_rsa"
+$destino = "/home/" + $usuario + "/SGLAB/" + $laboratorio
+$clavePrivada = Join-Path $env:USERPROFILE ".ssh/id_rsa"
 # $log variable removed as it was unused
 
 
@@ -201,12 +202,22 @@ Write-Output "======================================"
 try {
 	$ping = Test-Connection -ComputerName $servidor -Count 1 -Quiet
 	    if ($ping) {
-        	Write-Output "Subiendo archivo: scp $archivo "$usuario@$servidor:LAB6/""
-		    scp $archivo "$usuario@$servidor:LAB6/"
-	    }
+            try {
+                Write-Output "Subiendo archivo:  scp $archivo ${usuario}@${servidor}:${destino}  "
+		        scp "$archivo ${usuario}@${servidor}:${destino}  "
+                Write-Output "========== SCRIPT COMPLETADO con EXITO=========="  
+            }
+            catch {
+                Write-Output "Error al Subir archivo: $($_.Exception.Message)"
+                Write-Output "No existe el ${destino}, en el ${servidor}..."
+                Write-Output "========== SCRIPT con ERROR=========="
+                exit 1
+            }
+        }
         else {
       	    Write-Output "Fallo: Revisar conexion a servidor SSH: $servidor"       	        Write-Output "========== SCRIPT CON ERROR=========="
             Write-Output "========== HAY QUE ESTAR EN LA RED DE UTU (192.168.2.0/24)=========="
+            Write-Output "========== Tu dirección ip actual es=($($ipInfo.IPAddress))=========="
     	    exit 1
         } 
 }
