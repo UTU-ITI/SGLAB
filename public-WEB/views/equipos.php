@@ -45,7 +45,7 @@ if (!isset($_SESSION['usuario_id'])) {
                     </li>
                 </ul>
                 <div class="d-flex">
-                    <a href="login_usuario.html" class="btn btn-outline-light" id="btnSalir">
+                    <a href="../Controllers/logoutController.php" class="btn btn-outline-light" id="btnSalir">
                         <i class="bi bi-box-arrow-right me-1"></i> Salir
                     </a>
                 </div>

@@ -1,168 +1,381 @@
-# Sistema de Gestión de Laboratorios - MVP
+# 🏫 Sistema de Gestión de Laboratorios ITI-UTU
 
-SGLAB/
- ├── app/
- │   ├── Controllers/
- │   │    ├── AuthController.php
- │   │    └── UsuarioController.php
- │   ├── Models/
- │   │    ├── Personas.php
- │   │    ├── Usuarios.php
- │   │    └── Perfiles.php
- │   ├── Database/
- │   │    └── ConexionDB.php
- │   └── Factories/
- │        └── UsuarioFactory.php
- ├── public/
- │   ├── index.php
- │   ├── login.php
- │   └── register.php
- ├── .env.example
- ├── composer.json
+Sistema web para la gestión de laboratorios de computación, equipos y registros de estado.
 
+## 📋 Tabla de Contenidos
 
-Sistema para registro y gestión del estado de equipos en laboratorios informáticos, con módulos para estudiantes y administradores.
+- [Características](#características)
+- [Tecnologías](#tecnologías)
+- [Requisitos Previos](#requisitos-previos)
+- [Instalación con Docker](#instalación-con-docker)
+- [Instalación con XAMPP](#instalación-con-xampp)
+- [Configuración](#configuración)
+- [Uso](#uso)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Contribuir](#contribuir)
 
-## 📌 Requerimientos Clave
+---
 
-### 🎯 Requerimientos Funcionales (RF)
+## ✨ Características
 
-1. **Registro Estudiantil**
-   - Formulario para reportar estado de equipos (N/S, Nombre, Estado, Descripción)
-   - Validación de C.I. (8 dígitos)
-   - Registro automático de fecha/hora
+- 🔐 **Autenticación multi-rol**: Administrador, Docente, Estudiante
+- 🔑 **2FA (TOTP)**: Autenticación de dos factores para administradores
+- 🐙 **GitHub OAuth**: Login para estudiantes con GitHub
+- 📊 **Gestión de laboratorios**: Vista completa de equipos y registros
+- 💬 **Comentarios**: Los docentes pueden comentar sobre el estado de los laboratorios
+- 📈 **Reportes**: Registro de estado de equipos
+- 🔒 **Seguridad**: PDO prepared statements, bcrypt, CSRF protection
 
-2. **Panel Administrativo**
-   - Visualización de registros filtrables por fecha/estado
-   - Modificación de estados
-   - Autenticación segura
+---
 
-3. **Diagnóstico de Equipos**
-   - Script PowerShell para recolectar datos técnicos
-   - Tarea programada para diagnóstico automático
+## 🛠️ Tecnologías
 
-### 🛡️ Requerimientos No Funcionales (RNF)
+- **Backend**: PHP 8.3
+- **Base de Datos**: MySQL 8.0
+- **Frontend**: HTML5, CSS3, JavaScript (jQuery)
+- **Framework CSS**: Bootstrap 5
+- **Autenticación**: TOTP (Google Authenticator), GitHub OAuth
+- **Containerización**: Docker & Docker Compose
 
-1. **Usabilidad**
-   - Interfaz intuitiva (<3 clics para acciones principales)
-   - Tiempo respuesta <2s
+---
 
-2. **Seguridad**
-   - Autenticación con bcrypt
-   - Protección contra inyección SQL
-   - Validación cliente/servidor
+## 📦 Requisitos Previos
 
-3. **Compatibilidad**
-   - Soporte para Chrome, Edge, Firefox
-   - Diseño responsive
+### Para Docker (Recomendado):
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) instalado
+- [Git](https://git-scm.com/) instalado
 
-## 📅 Planificación por Sprints (4 semanas)
+### Para XAMPP (Desarrollo local):
+- [XAMPP](https://www.apachefriends.org/) con PHP 8.3+
+- [Composer](https://getcomposer.org/) instalado
+- MySQL/MariaDB
 
-### 🚀 Sprint 1: Infraestructura y Diseño
+---
 
-**Entregables:**
-- [ ] Diagrama ER y script SQL (`database/schema.sql`)
-- [ ] Mockups de interfaces (PDF/FIGMA en `docs/design`)
-- [ ] Configuración inicial servidor (`docs/setup.md`)
-- [ ] Script base PowerShell (`scripts/diagnostico_base.ps1`)
+## 🐳 Instalación con Docker (Recomendado)
 
-**Tareas Técnicas:**
-1. Diseñar modelo de base de datos
-2. Crear prototipos de UI
-3. Configurar ambiente LAMP
-4. Desarrollar script PS para datos básicos
+### 1. Clonar el repositorio
 
-### 🛠️ Sprint 2: Núcleo del Sistema
-
-**Entregables:**
-- [ ] Backend PHP con endpoints (`api/registros.php`)
-- [ ] Sistema de autenticación (`lib/auth.php`)
-- [ ] Formulario web funcional (`public/formulario.html`)
-- [ ] Script PS completo (`scripts/diagnostico_completo.ps1`)
-
-**Tareas Técnicas:**
-1. Implementar CRUD para registros
-2. Desarrollar módulo de login
-3. Crear formulario con validación JS
-4. Ampliar script PS con todas las métricas
-
-### ✨ Sprint 3: Integración y Funcionalidades Avanzadas
-
-**Entregables:**
-- [ ] Panel administrativo (`admin/index.html`)
-- [ ] API para filtros (`api/filtros.php`)
-- [ ] Tarea programada PS (`scripts/tarea_programada.ps1`)
-- [ ] Documentación API (`docs/api.md`)
-
-**Tareas Técnicas:**
-1. Desarrollar interfaz de administración
-2. Implementar filtros complejos
-3. Configurar tarea programada Windows
-4. Documentar endpoints API
-
-### 🚢 Sprint 4: Pruebas y Despliegue
-
-**Entregables:**
-- [ ] Suite de pruebas (`tests/`)
-- [ ] Script despliegue (`deploy.sh`)
-- [ ] Manual de usuario (`docs/manual_usuario.md`)
-
-
-## 🛠️ Instalación
-
-1. **Requisitos:**
-   - Servidor Linux (Ubuntu 22.04+)
-   - Apache 2.4, PHP 8.2+, MySQL 8.0+
-   - PowerShell 5.1+ (para scripts)
-
-2. **Configuración Inicial:**
 ```bash
-# Clonar repositorio
-git clone https://github.com/utu-iti/gestion-laboratorios.git
-cd gestion-laboratorios
+git clone https://github.com/tu-usuario/sistema-gestion-laboratorios.git
+cd sistema-gestion-laboratorios
+```
 
-# Configurar base de datos
-mysql -u root -p < database/schema.sql
-#Previamente exportar el modelo del proyecto con
-mysqldump -u root -p > database/schema.sql
+### 2. Configurar variables de entorno
 
-# Permisos
-chmod +x scripts/registros.ps1
-chmod +x deploy.sh
+```bash
+# Copiar el archivo de configuración para Docker
+cp .env.docker .env
 
-📂 Estructura de Directorios
-/sglab
-├── api/               # Endpoints PHP
-│   ├── /Core
-│   ├── /Controllers
-│   ├── /Models
-│   ├── /Views
-│   └── /Services
-├── /config
-│       └── /prod
-│       └── /test
-│       └── /dev               
-├── database/          # Esquema SQL
-├── docs/              # Documentación
-├── public/            # Archivos accesibles web
-│   ├── css/
-│   ├── js/
-│   └── img/   
-│   └── index.html
-├── scripts/           # Scripts PowerShell
-│   └── registro.ps1
-├── tests/             # Pruebas automatizadas
-└── vendor/            # Liberias necesarias por composer
-└── README.md          # Este archivo
+# Editar .env y configurar tus credenciales de GitHub OAuth
+# nano .env
+```
 
+**Importante**: Configura tu GitHub OAuth App en https://github.com/settings/developers
 
+- **Homepage URL**: `http://localhost:8080`
+- **Authorization callback URL**: `http://localhost:8080/Controllers/githubAuthController.php`
 
-├── /public
-│   └── index.html
-│   └── /asset
-│             └── /img   
-│             └── /css
-│             └── /js                    
+### 3. Construir y levantar los contenedores
 
+```bash
+# Construir imágenes y levantar servicios
+docker-compose up -d --build
+
+# Ver logs en tiempo real (opcional)
+docker-compose logs -f
+```
+
+### 4. Acceder a la aplicación
+
+Una vez que los contenedores estén ejecutándose:
+
+- **Aplicación web**: http://localhost:8080
+- **phpMyAdmin**: http://localhost:8081
+  - Usuario: `root`
+  - Contraseña: `root_password_123`
+
+### 5. Usuarios de prueba
+
+El sistema viene con usuarios pre-configurados:
+
+| Rol | Usuario | Contraseña | Características |
+|-----|---------|------------|----------------|
+| **Administrador** | `admin` | `admin123` | 2FA obligatorio (Google Authenticator) |
+| **Docente** | `docente1` | `docente123` | Acceso a gestión de laboratorios |
+| **Estudiante** | - | - | Login con GitHub OAuth |
+
+---
+
+## 📂 Comandos Docker Útiles
+
+```bash
+# Levantar servicios
+docker-compose up -d
+
+# Detener servicios
+docker-compose down
+
+# Ver logs
+docker-compose logs -f web
+docker-compose logs -f db
+
+# Reconstruir imágenes
+docker-compose up -d --build
+
+# Ejecutar composer install manualmente
+docker-compose exec web composer install
+
+# Acceder al contenedor web
+docker-compose exec web bash
+
+# Acceder al contenedor de base de datos
+docker-compose exec db mysql -uroot -proot_password_123 bddsglab6
+
+# Eliminar volúmenes (CUIDADO: borra todos los datos)
+docker-compose down -v
+
+# Ver estado de los servicios
+docker-compose ps
+```
+
+---
+
+## 💻 Instalación con XAMPP (Alternativa)
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/tu-usuario/sistema-gestion-laboratorios.git
+cd public-WEB
+```
+
+### 2. Instalar dependencias con Composer
+
+```bash
+composer install
+```
+
+### 3. Configurar base de datos
+
+1. Iniciar XAMPP (Apache + MySQL)
+2. Acceder a phpMyAdmin: http://localhost/phpmyadmin
+3. Crear base de datos: `bddsglab6`
+4. Importar el archivo: `BaseDatos.sql`
+
+### 4. Configurar variables de entorno
+
+```bash
+# Copiar plantilla
+cp .env.example .env
+
+# Editar .env con tus configuraciones
+# Asegurarse de que DB_HOST=localhost
+```
+
+### 5. Acceder a la aplicación
+
+http://localhost/public-WEB/views/login_usuario.html
+
+---
+
+## ⚙️ Configuración
+
+### Archivo `.env`
+
+```env
+# Base de datos
+DB_HOST=db                     # "db" para Docker, "localhost" para XAMPP
+DB_NAME=bddsglab6
+
+# Usuarios de base de datos
+DB_USER_ADMIN=sgapp_admin
+DB_PASSWORD_ADMIN=AdministradorITI!
+
+# GitHub OAuth
+GITHUB_CLIENT_ID=tu_client_id
+GITHUB_CLIENT_SECRET=tu_client_secret
+GITHUB_REDIRECT_URI=http://localhost:8080/Controllers/githubAuthController.php
+```
+
+### GitHub OAuth
+
+1. Ir a https://github.com/settings/developers
+2. Click en "New OAuth App"
+3. Configurar:
+   - **Application name**: Sistema Gestión Laboratorios
+   - **Homepage URL**: `http://localhost:8080`
+   - **Callback URL**: `http://localhost:8080/Controllers/githubAuthController.php`
+4. Copiar Client ID y Client Secret a `.env`
+
+---
+
+## 🚀 Uso
+
+### Login
+
+#### Administrador
+1. Acceder a http://localhost:8080
+2. Ingresar usuario y contraseña
+3. **Primera vez**: Escanear código QR con Google Authenticator
+4. Ingresar código de 6 dígitos
+
+#### Docente
+1. Acceder a http://localhost:8080
+2. Ingresar usuario y contraseña
+3. Acceso directo al panel docente
+
+#### Estudiante
+1. Acceder a http://localhost:8080
+2. Click en "Continuar con GitHub"
+3. Autorizar aplicación en GitHub
+4. **Importante**: El email de GitHub debe coincidir con el email registrado en el sistema
+
+### Panel Docente - Gestión de Laboratorios
+
+1. Login como docente
+2. Ir a "Laboratorios"
+3. Ver todos los laboratorios con sus equipos
+4. Ver último registro de cada equipo
+5. Agregar comentarios sobre el estado de cada laboratorio
+
+---
+
+## 📁 Estructura del Proyecto
 
 ```
+public-WEB/
+├── Controllers/           # Controladores MVC
+│   ├── loginController.php
+│   ├── DocenteController.php
+│   ├── EquipoController.php
+│   └── ...
+├── Models/                # Modelos de datos
+│   ├── Database.php
+│   ├── Usuario.php
+│   ├── Equipo.php
+│   ├── LaboratorioDocente.php
+│   └── ...
+├── views/                 # Vistas
+│   ├── login_usuario.html
+│   ├── menu_admin.php
+│   ├── menu_docente.php
+│   ├── panel_docente_laboratorios.php
+│   └── ...
+├── Public/                # Recursos estáticos
+│   ├── css/
+│   ├── js/
+│   └── img/
+├── docker/                # Configuración Docker
+│   ├── php.ini
+│   └── init-db.sh
+├── vendor/                # Dependencias Composer (no en Git)
+├── .env                   # Variables de entorno (no en Git)
+├── .env.example           # Plantilla de configuración
+├── .env.docker            # Configuración para Docker
+├── docker-compose.yml     # Orquestación de servicios
+├── Dockerfile             # Imagen Docker PHP+Apache
+├── composer.json          # Dependencias PHP
+├── BaseDatos.sql          # Script SQL de base de datos
+└── README.md              # Este archivo
+```
+
+---
+
+## 🐛 Solución de Problemas
+
+### Error de conexión a base de datos en Docker
+
+```bash
+# Verificar que el servicio db esté corriendo
+docker-compose ps
+
+# Ver logs del servicio de base de datos
+docker-compose logs db
+
+# Reiniciar servicios
+docker-compose restart
+```
+
+### Composer no encuentra dependencias
+
+```bash
+# Instalar dependencias manualmente
+docker-compose exec web composer install
+
+# O reconstruir la imagen
+docker-compose up -d --build
+```
+
+### Error de permisos
+
+```bash
+# Dar permisos a www-data en el contenedor
+docker-compose exec web chown -R www-data:www-data /var/www/html
+```
+
+### GitHub OAuth no funciona
+
+1. Verificar que las URLs en GitHub OAuth App coincidan exactamente
+2. Verificar que `GITHUB_REDIRECT_URI` en `.env` sea correcta
+3. Revisar logs: `docker-compose logs -f web`
+
+---
+
+## 🤝 Contribuir
+
+1. Fork el proyecto
+2. Crear una rama: `git checkout -b feature/nueva-funcionalidad`
+3. Commit cambios: `git commit -am 'Agregar nueva funcionalidad'`
+4. Push a la rama: `git push origin feature/nueva-funcionalidad`
+5. Crear Pull Request
+
+---
+
+## 📝 Notas Importantes
+
+### Sobre vendor/ y Git
+
+⚠️ **vendor/ NO se sube a Git**
+
+La carpeta `vendor/` contiene las dependencias de Composer y NO debe subirse al repositorio.
+
+**¿Por qué?**
+- Es pesada (muchos archivos)
+- Se puede regenerar con `composer install`
+- Puede causar conflictos entre sistemas
+
+**¿Cómo se instala?**
+- **Con Docker**: Automáticamente al construir la imagen
+- **Con XAMPP**: Ejecutar `composer install` manualmente
+
+### Sobre .env y Git
+
+⚠️ **.env NO se sube a Git** (contiene credenciales sensibles)
+
+- Usa `.env.example` como plantilla
+- Cada desarrollador crea su propio `.env`
+
+---
+
+## 📄 Licencia
+
+Este proyecto es de código abierto para fines educativos.
+
+---
+
+## 👥 Autores
+
+- **Equipo de Desarrollo** - ITI-UTU
+
+---
+
+## 🙏 Agradecimientos
+
+- Instituto Tecnológico Industrial (ITI)
+- Universidad del Trabajo del Uruguay (UTU)
+- Comunidad de código abierto
+
+---
+
+**¿Preguntas o problemas?** Abre un [Issue](https://github.com/tu-usuario/sistema-gestion-laboratorios/issues)

@@ -35,7 +35,7 @@ $primeraVez = isset($_GET['primera_vez']) && $_GET['primera_vez'] == '1';
 
     <header class="page-header text-center py-3">
         <div class="container-fluid d-flex justify-content-between align-items-center">
-            <a href="login_usuario.html" class="btn btn-primary btn-sm custom-back-btn">
+            <a href="../Controllers/logoutController.php" class="btn btn-primary btn-sm custom-back-btn">
                 <i class="fas fa-arrow-left me-2"></i>Salir
             </a>
             <h1 class="mb-0 flex-grow-1 text-center page-title-text">Registro Estado de Equipos</h1>

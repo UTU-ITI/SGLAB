@@ -67,21 +67,26 @@ $(document).ready(function() {
                 password: password
             },
             success: function(response) {
-                console.log('📨 Respuesta del servidor:', response);
-                
+                console.log('========================================');
+                console.log('📥 Respuesta del servidor:', response);
+                console.log('Success:', response.success);
+                console.log('Requires 2FA:', response.requires_2fa);
+                console.log('Redirect:', response.redirect);
+                console.log('========================================');
+
                 submitBtn.html(originalText);
                 submitBtn.prop('disabled', false);
-                
+
                 if (response.success) {
                     if (response.requires_2fa) {
                         // Administrador necesita 2FA
                         tempUserId = response.user_id;
                         tempUsername = username;
-                        
-                        console.log('👑 Usuario requiere 2FA');
+
+                        console.log('Usuario requiere 2FA');
                         console.log('User ID:', tempUserId);
                         console.log('Needs setup:', response.needs_setup);
-                        
+
                         if (response.needs_setup) {
                             // Primera vez - configurar 2FA
                             console.log('📱 Primera vez - Mostrando QR');
@@ -93,11 +98,20 @@ $(document).ready(function() {
                         }
                     } else {
                         // Docente - login directo
-                        console.log('✅ Login exitoso - Redirigiendo');
-                        showAlert('Login exitoso', 'success');
-                        setTimeout(() => {
-                            window.location.href = response.redirect;
-                        }, 1000);
+                        console.log('✅ Login exitoso como DOCENTE - Redirigiendo a:', response.redirect);
+                        showAlert('Login exitoso. Redirigiendo...', 'success');
+
+                        // Verificar que tenemos la URL de redirección
+                        if (response.redirect) {
+                            console.log('🔄 Redirigiendo en 1 segundo a:', response.redirect);
+                            setTimeout(() => {
+                                console.log('🚀 Ejecutando redirección ahora...');
+                                window.location.href = response.redirect;
+                            }, 1000);
+                        } else {
+                            console.error('❌ ERROR: No hay URL de redirección en la respuesta');
+                            showAlert('Error: No se especificó página de destino', 'danger');
+                        }
                     }
                 } else {
                     console.error('❌ Login fallido:', response.message);
