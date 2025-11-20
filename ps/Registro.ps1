@@ -7,10 +7,6 @@ $destino = "/home/" + $usuario + "/" + $laboratorio
 $clavePrivada = Join-Path $env:USERPROFILE ".ssh\id_rsa"
 # $log variable removed as it was unused
 
-# Ejecutar comandos necesarios para permisos y claves
-ssh-keygen -t rsa -b 4096
-get-ExecutionPolicy
-Set-ExecutionPolicy Unrestricted -Scope Process -Force
 
 # Obtener fecha y nombre del equipo
 $fecha = Get-Date -Format "yyyyMMdd"
