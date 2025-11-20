@@ -1,4 +1,8 @@
 # Script PowerShell: Diagnóstico del PC y exportación en formato TOML con clave SSH
+param(
+    [int]$cedula = 0
+)
+
 #$usuario = "juan"
 $usuario = [Environment]::UserName
 $usuario = $usuario.ToLower()
@@ -13,7 +17,8 @@ $clavePrivada = Join-Path $env:USERPROFILE ".ssh/id_rsa"
 $fecha = Get-Date -Format "yyyyMMdd"
 $fechaLegible = Get-Date -Format "yyyy/MM/dd (HH:mm)"
 $nombrePC = $env:COMPUTERNAME
-
+$serialPC = $((Get-CimInstance Win32_BIOS).SerialNumber)
+$serial = $serialPC.Trim()
 # Función para generar clave SSH si no existe
 function New-SSHKey {
     $sshDir = "$env:USERPROFILE\.ssh"
@@ -118,23 +123,26 @@ catch {
 }
 
 # Solicitar y validar cédula del usuario
-#//TODO: Verificar si viene parametro ci=1 
-do {
-    $cedula = Read-Host "Ingrese su cedula (maximo 8 digitos numericos)"
-    $cedulaValida = $cedula -match '^\d{1,8}$'
-    if (-not $cedulaValida) {
-        Write-Output "Cédula inválida. Debe contener solo números y hasta 8 dígitos."
-    }
-} until ($cedulaValida)
+if ($cedula -eq 0) {
+    do {
+        $cedula = Read-Host "Ingrese su cedula (maximo 8 digitos numericos)"
+        $cedulaValida = $cedula -match '^\d{1,8}$'
+        if (-not $cedulaValida) {
+            Write-Output "Cédula inválida. Debe contener solo números y hasta 8 dígitos."
+        }
+    } until ($cedulaValida)
+} else {
+    Write-Output "Usando cédula del parámetro: $cedula"
+}
 
 # Ruta y nombre de archivo de salida (en el Escritorio del usuario)
 $escritorio = [Environment]::GetFolderPath("Desktop")
-$archivo = Join-Path $escritorio "$fecha-$nombrePC-$estado-$numeroSerie.toml"
+$archivo = Join-Path $escritorio "$fecha-$nombrePC-$estado-$serial.toml"
 
 # Crear contenido TOML
 $contenido = @"
 [info_general]
-serial = (Get-CimInstance Win32_BIOS).SerialNumber
+serial = $serial
 fecha = "$($fechaLegible)"
 nombre_pc = "$($nombrePC)"
 estado_conexion = "$($estado)"
@@ -197,15 +205,34 @@ Write-Output ""
 Write-Output "========== CLAVE SSH PUBLICA =========="
 Write-Output $clavePublica
 Write-Output "======================================"
-
-# Código SCP original comentado
+Start-Sleep 2
+# Código SCP con verificación de directorio destino
 try {
 	$ping = Test-Connection -ComputerName $servidor -Count 1 -Quiet
 	    if ($ping) {
+            # Verificar si el directorio destino existe en el servidor
+            Write-Output "Verificando directorio destino en servidor..."
+            $checkDirCmd = "ssh -i `"$clavePrivada`" -o StrictHostKeyChecking=no ${usuario}@${servidor} 'test -d ${destino} && echo EXISTS || echo NOTEXISTS'"
             try {
-                Write-Output "Subiendo archivo:  scp $archivo ${usuario}@${servidor}:${destino}  "
-		        scp "$archivo ${usuario}@${servidor}:${destino}  "
-                Write-Output "========== SCRIPT COMPLETADO con EXITO=========="  
+                $dirExists = Invoke-Expression $checkDirCmd
+                if ($dirExists -match "NOTEXISTS") {
+                    Write-Output "El directorio ${destino} no existe en el servidor ${servidor}"
+                    Write-Output "Intenta crear el directorio con: ssh ${usuario}@${servidor} 'mkdir -p ${destino}'"
+                    Write-Output "========== SCRIPT con ERROR=========="
+                    exit 1
+                }
+                Write-Output "Directorio destino verificado: ${destino}"
+            }
+            catch {
+                Write-Output "Error al verificar directorio destino: $($_.Exception.Message)"
+                Write-Output "Continuando con SCP de todas formas..."
+            }
+
+            # Subir archivo con SCP
+            try {
+                Write-Output "Subiendo archivo:  scp -i `"$clavePrivada`" `"$archivo`" ${usuario}@${servidor}:${destino}/"
+		        scp -i "$clavePrivada" -o StrictHostKeyChecking=no "$archivo" "${usuario}@${servidor}:${destino}/"
+                Write-Output "========== SCRIPT COMPLETADO con EXITO=========="
             }
             catch {
                 Write-Output "Error al Subir archivo: $($_.Exception.Message)"
@@ -215,11 +242,12 @@ try {
             }
         }
         else {
-      	    Write-Output "Fallo: Revisar conexion a servidor SSH: $servidor"       	        Write-Output "========== SCRIPT CON ERROR=========="
+      	    Write-Output "Fallo: Revisar conexion a servidor SSH: $servidor"
+            Write-Output "========== SCRIPT CON ERROR=========="
             Write-Output "========== HAY QUE ESTAR EN LA RED DE UTU (192.168.2.0/24)=========="
             Write-Output "========== Tu dirección ip actual es=($($ipInfo.IPAddress))=========="
     	    exit 1
-        } 
+        }
 }
 catch {
     Write-Output "Error al ejecutar ping: $($_.Exception.Message)"
