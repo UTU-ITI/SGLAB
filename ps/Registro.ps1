@@ -3,7 +3,7 @@ param(
     [int]$cedula = 0
 )
 
-$usuario = "tecnicatura"
+$usuario = "Tecnicatura"
 #$usuario = [Environment]::UserName
 #$usuario = $usuario.ToLower()
 $servidor = "192.168.2.46"
@@ -126,8 +126,8 @@ catch {
 function Test-CedulaUruguaya {
     param([string]$cedula)
 
-    # Verificar formato básico (1-8 dígitos)
-    if ($cedula -notmatch '^\d{1,8}$') {
+    # Verificar formato básico (1-9 dígitos)
+    if ($cedula -notmatch '^\d{1,9}$') {
         return $false
     }
 
@@ -147,8 +147,8 @@ function Test-CedulaUruguaya {
     $digitoVerificador = if ($resto -eq 0) { 0 } else { 10 - $resto }
 
     # Si tiene 8 dígitos, validar el último como verificador
-    if ($cedula.Length -eq 8) {
-        $ultimoDigito = [int]::Parse($cedula.Substring(7, 1))
+    if ($cedula.Length -eq 9) {
+        $ultimoDigito = [int]::Parse($cedula.Substring(8, 1))
         return $ultimoDigito -eq $digitoVerificador
     }
 
@@ -162,10 +162,10 @@ if ($cedula -eq 0) {
 } else {
     # Si se pasó parámetro diferente de 0, solicitar cédula
     do {
-        $inputCedula = Read-Host "Ingrese su cedula (maximo 8 digitos numericos)"
+        $inputCedula = Read-Host "Ingrese su cedula (maximo 9 digitos con digito verificador 1234567-8)"
         $cedulaValida = Test-CedulaUruguaya $inputCedula
         if (-not $cedulaValida) {
-            Write-Output "Cédula inválida. Debe contener solo números (1-8 dígitos) y tener dígito verificador válido si tiene 8 dígitos."
+            Write-Output "Cédula inválida. Debe contener solo números (1-9   dígitos) y tener dígito verificador válido si tiene 8 dígitos."
         } else {
             $cedula = [int]$inputCedula
         }
